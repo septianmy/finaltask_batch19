@@ -1,23 +1,41 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('photos', {
+    await queryInterface.createTable('hirings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      image: {
+      title: {
         type: Sequelize.STRING
       },
-      postId: {
-        allowNull : false,
+      description: {
+        type: Sequelize.TEXT
+      },
+      startDate: {
+        type: Sequelize.DATE
+      },
+      endDate: {
+        type: Sequelize.DATE
+      },
+      price: {
+        type: Sequelize.INTEGER
+      },
+      hiringBy: {
         type: Sequelize.INTEGER,
         references: {
-          model: "posts",
+          model: "users",
           key: "id",
-        }
+        },
+      },
+      hiringTo: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,
@@ -30,6 +48,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('photos');
+    await queryInterface.dropTable('hirings');
   }
 };

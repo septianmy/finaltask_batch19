@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 exports.register = async (req,res) => {
-    console.log(req.body.emailregister, req.body.passwordregister, req.body.fullname);
     try {
         const schema = Joi.object({
             fullname: Joi.string().min(3).required().label("Fullname"),

@@ -4,6 +4,7 @@ const router = express.Router();
 //Controller
 const { register, login, checkAuth } = require("../controllers/auth");
 const { getPosts, getPostDetail } = require("../controllers/posts");
+const { getOrders, addOrder } = require("../controllers/orders");
 
 //middleware 
 const {auth, userCheck} = require('../middleware/auth');
@@ -16,5 +17,9 @@ router.get("/check-auth", auth, checkAuth);
 //Post
 router.get("/posts", auth, getPosts);
 router.get("/post/:id", auth, getPostDetail);
+
+//Order
+router.get("/orders", auth, getOrders);
+router.post("/order", auth, addOrder )
 
 module.exports = router;
