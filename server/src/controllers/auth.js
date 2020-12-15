@@ -54,6 +54,7 @@ exports.register = async (req,res) => {
             data : {
                 user : {
                     email,
+                    fullname,
                     token,
                 }
             },
