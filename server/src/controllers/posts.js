@@ -48,3 +48,54 @@ exports.getPosts = async (req, res) => {
         });
     }
 };
+
+exports.getPostDetail = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const post = await Posts.findOne({
+            attributes: {
+                exclude: ["createdAt", "updatedAt"],
+            },
+            where: {
+                id,
+            },
+            include: [{
+                model: photos,
+                as: "photos",
+                attributes: {
+                    exclude: ["createdAt", "updatedAt"],
+                },
+            }, {
+                model: users,
+                as: "user",
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "password"],
+                },
+            }]
+        });
+
+        if(!post){
+            return res.status(400).send({
+                status: resourceNotFound,
+                data: {
+                    post: null,
+                }
+            });
+        }
+
+        res.send({
+            status: responseSuccess,
+            message: "Post successfully get",
+            data : {
+                post
+            },
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error: {
+                message: "Server Error Posts",
+            },
+        });
+    }
+};
