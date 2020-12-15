@@ -4,11 +4,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 exports.register = async (req,res) => {
+    console.log(req.body.emailregister, req.body.passwordregister, req.body.fullname);
     try {
         const schema = Joi.object({
             fullname: Joi.string().min(3).required().label("Fullname"),
-            email: Joi.string().email().min(6).required().label("Email"),
-            password: Joi.string().min(6).required().label("Password"),
+            emailregister: Joi.string().email().min(6).required().label("Email"),
+            passwordregister: Joi.string().min(6).required().label("Password"),
         });
 
         const {error} = schema.validate(req.body, {
@@ -24,7 +25,10 @@ exports.register = async (req,res) => {
             });
         }
 
-        const {fullname, email, password } = req.body;
+        const fullname = req.body.fullname;
+        const email = req.body.emailregister;
+        const password = req.body.passwordregister;
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         //Checking for duplicating username 
@@ -42,8 +46,8 @@ exports.register = async (req,res) => {
             });
         }
 
-        const user = await users.create({ ...req.body, password: hashedPassword, status:"not active", role:1 });
-        const token = jwt.sign({ id : user.id }, "vinways");
+        const user = await users.create({ email:email, fullname:fullname, password: hashedPassword });
+        const token = jwt.sign({ id : user.id }, "waysdesign");
 
         res.send({
             message : "Response Success",
