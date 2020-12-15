@@ -78,3 +78,109 @@ exports.addOrder = async (req,res) => {
         });
     }
 };
+
+exports.getOrderById = async (req, res) => {
+    try {
+        const {id} = req.params;
+
+        const orders = await Hirings.findAll({
+            attributes: {
+                exclude: ["createdAt", "updatedAt","hiringBy", "hiringTo"],
+            },
+            where : {
+                hiringTo : id,
+            },
+            include: [{
+                model: users,
+                as: "orderBy",
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "password"],
+                },
+            }, {
+                model: users,
+                as: "orderTo",
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "password"],
+                },
+            }]
+        });
+
+        if(orders.length === 0){
+            return res.status(400).send({
+                status: resourceNotFound,
+                message : "No ordering",
+                data: {
+                    orders: [],
+                }
+            });
+        }
+
+        res.send({
+            status: responseSuccess,
+            message: "Orders successfully get",
+            data : {
+                orders
+            },
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error: {
+                message: "Server Error Posts",
+            },
+        });
+    }
+};
+
+exports.getOfferById = async (req, res) => {
+    try {
+        const {id} = req.params;
+
+        const orders = await Hirings.findAll({
+            attributes: {
+                exclude: ["createdAt", "updatedAt","hiringBy", "hiringTo"],
+            },
+            where : {
+                hiringBy : id,
+            },
+            include: [{
+                model: users,
+                as: "orderBy",
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "password"],
+                },
+            }, {
+                model: users,
+                as: "orderTo",
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "password"],
+                },
+            }]
+        });
+
+        if(orders.length === 0){
+            return res.status(400).send({
+                status: resourceNotFound,
+                message : "No ordering",
+                data: {
+                    orders: [],
+                }
+            });
+        }
+
+        res.send({
+            status: responseSuccess,
+            message: "Orders successfully get",
+            data : {
+                orders
+            },
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error: {
+                message: "Server Error Posts",
+            },
+        });
+    }
+};
