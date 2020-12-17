@@ -4,7 +4,7 @@ const router = express.Router();
 //Controller
 const { register, login, checkAuth } = require("../controllers/auth");
 const { getPosts, getPostDetail } = require("../controllers/posts");
-const { getOrders, addOrder, getOrderById, getOfferById} = require("../controllers/orders");
+const { getOrders, addOrder, getOrderById, getOfferById, updateOrder, deleteOrder} = require("../controllers/orders");
 
 //middleware 
 const {auth, userCheck} = require('../middleware/auth');
@@ -23,4 +23,6 @@ router.get("/orders", auth, getOrders);
 router.post("/order", auth, addOrder);
 router.get("/my-order/:id", auth, getOrderById);
 router.get("/my-offer/:id", auth, getOfferById);
+router.patch("/order/:id", auth, updateOrder);
+router.delete("/order/:id", auth, deleteOrder);
 module.exports = router;
