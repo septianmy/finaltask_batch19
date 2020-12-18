@@ -5,6 +5,7 @@ const router = express.Router();
 const { register, login, checkAuth } = require("../controllers/auth");
 const { getPosts, getPostDetail } = require("../controllers/posts");
 const { getOrders, addOrder, getOrderById, getOfferById, updateOrder, deleteOrder} = require("../controllers/orders");
+const { getProfile } = require("../controllers/profile");
 
 //middleware 
 const {auth, userCheck} = require('../middleware/auth');
@@ -25,4 +26,7 @@ router.get("/my-order/:id", auth, getOrderById);
 router.get("/my-offer/:id", auth, getOfferById);
 router.patch("/order/:id", auth, updateOrder);
 router.delete("/order/:id", auth, deleteOrder);
+
+//Profile 
+router.get("/profile/:id", auth, getProfile );
 module.exports = router;
