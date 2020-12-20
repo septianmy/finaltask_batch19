@@ -6,10 +6,12 @@ const { register, login, checkAuth } = require("../controllers/auth");
 const { getPosts, getPostDetail, addPost} = require("../controllers/posts");
 const { getOrders, addOrder, getOrderById, getOfferById, updateOrder, deleteOrder} = require("../controllers/orders");
 const { getProfile, editProfile, addArt } = require("../controllers/profile");
+const { addProject, getProjectDetail } = require("../controllers/projects");
 
 //middleware 
 const {auth, userCheck} = require('../middleware/auth');
 const { uploadImage } = require('../middleware/upload');
+
 
 //Auth
 router.post("/register", register);
@@ -33,4 +35,8 @@ router.delete("/order/:id", auth, deleteOrder);
 router.get("/profile/:id", auth, getProfile );
 router.put("/profile/:id", uploadImage('avatar', null), auth, editProfile);
 router.post("/upload-arts/:id", uploadImage('arts', null), auth, addArt);
+
+//Project
+router.get("/project/:id", auth, getProjectDetail);
+router.post("/project/:id", uploadImage('projectphotos', null), auth, addProject);
 module.exports = router;

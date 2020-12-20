@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
           name: 'hiringTo'
         }
       });
+      hiring.hasOne(models.projects, {
+        as : "projects",
+      });
     }
   };
   hiring.init({
