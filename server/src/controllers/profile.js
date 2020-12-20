@@ -14,10 +14,13 @@ exports.getProfile = async (req,res) => {
             },
             include : [{
                 model: posts, as: "posts", attributes :['id','title','description'],
+                limit:1,
+                order: [['createdAt','DESC']],
                 include: [{model:photos, as: "photos", separate:true, attributes:['id','image'], limit:1}]
             },{
                 model: arts, as: "arts", attributes:['id','image']
             }],
+            
         });
 
         if(!user){
@@ -110,6 +113,71 @@ exports.editProfile = async (req,res) => {
             },
         });
 
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error: {
+                message: "Server Error",
+            },
+        });
+    }
+};
+
+exports.addArt = async (req,res) => {
+    const {id} = req.params;
+    const file = req.files;
+
+    console.log("ini file", file)
+    try {
+        const checkUser = await users.findOne({
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "password"],
+            },
+            where: {
+                id,
+            },
+        });
+
+        if(!checkUser){
+            return res.status(400).send({
+                status: resourceNotFound,
+                data: {
+                    user: null,
+                }
+            });
+        }
+
+        const art = async () => {
+            return Promise.all(
+              file.arts.map(async (image) => {
+                let imageName = `${image.fieldname}/${image.filename}`;
+                const addingart = await arts.create({
+                  userId: id,
+                  image: imageName,
+                });
+              })
+            );
+          };
+          art().then(async () => {
+            const response = await users.findOne({
+              where: { id },
+              attributes: {
+                exclude: ["createdAt", "updatedAt"],
+                },
+                include: [{
+                    model: arts, as: "arts", attributes:['id','image']
+                }]
+            });
+        
+            res.status(200).json({
+                status: 'success',
+                message: 'Arts Successfully Added',
+                data: {
+                  arts: response,
+                },
+              });
+            });
 
     } catch (error) {
         console.log(error);

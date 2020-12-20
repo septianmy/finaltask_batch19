@@ -136,7 +136,6 @@ exports.addPost = async (req,res) => {
         }
 
         const photo = async () => {
-
             return Promise.all(
               file.photos.map(async (image) => {
                 let imageName = `${image.fieldname}/${image.filename}`;
@@ -170,7 +169,7 @@ exports.addPost = async (req,res) => {
       
             res.status(200).json({
               status: 'success',
-              message: 'Post added successfully',
+              message: 'Post Successfully Added',
               data: {
                 post: response,
               },
